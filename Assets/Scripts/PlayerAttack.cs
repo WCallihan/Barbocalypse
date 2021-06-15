@@ -8,14 +8,15 @@ public class PlayerAttack : MonoBehaviour {
     [SerializeField] Transform attackLeftPos;
     [SerializeField] float attackRange = 0.5f;
     [SerializeField] LayerMask enemyLayers;
-    [SerializeField] int attackDamage = 1;
+    [SerializeField] int attackDamage;
 
     // Update is called once per frame
     void Update() {
     }
 
     //called by characters and enemies to deal damage, animation handled by the specific script
-    public void Attack(int facingDirection) {
+    public void Attack(int damage, int facingDirection) {
+        attackDamage = damage;
         Collider2D[] enemiesToDamage = null;
         if(facingDirection == 1) { //facing right
             enemiesToDamage = Physics2D.OverlapCircleAll(attackRightPos.position, attackRange, enemyLayers); //makes array of anyone in the enemyLayers layer mask within the created circle (center point, radius, layer)

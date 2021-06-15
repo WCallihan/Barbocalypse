@@ -26,7 +26,7 @@ public class EnemyAttack : MonoBehaviour {
         }
         foreach(Collider2D enemy in enemiesToDamage) {
             if(enemiesToDamage != null)
-                enemy.GetComponent<PlayerController>().TakeDamage(attackDamage);
+                enemy.GetComponent<PlayerController>().TakeDamage(attackDamage, facingDirection);
         }
     }
 

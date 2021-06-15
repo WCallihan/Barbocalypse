@@ -430,6 +430,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 601791682409439956, guid: af76221ee41488943883c2dd608f7f06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1397301622331744389, guid: af76221ee41488943883c2dd608f7f06, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -8706,6 +8710,8 @@ MonoBehaviour:
   rightSpawn: {fileID: 1828755831}
   enemyPrefab: {fileID: 6074431941025222430, guid: 2ac026faf189c7d4896a7ebf52551bcc, type: 3}
   maxEnemies: 5
+  powerupPrefabs:
+  - {fileID: 601791683322902649, guid: 104a57c85c250264aad335db7d5bde09, type: 3}
 --- !u!4 &1721539407
 Transform:
   m_ObjectHideFlags: 0

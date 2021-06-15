@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] bool m_noBlood = false;
     [SerializeField] GameObject m_slideDust;
 
+    [SerializeField] GameObject swordPowerupIndicator;
+
     private GameManager gameManager;
     private Animator m_animator;
     private Rigidbody2D m_body2d;
@@ -18,15 +20,20 @@ public class PlayerController : MonoBehaviour {
     private Sensor_HeroKnight m_wallSensorL1;
     private Sensor_HeroKnight m_wallSensorL2;
     private PlayerAttack playerAttack;
-    private HealthManager livesManager;
+    private HealthManager healthManager;
+
+    private PowerupType currentPowerup = PowerupType.None;
+
     private bool m_grounded = false;
     private bool m_rolling = false;
+    private bool blocking = false;
+    public bool isDead = false;
+
     private int m_facingDirection = 1;
     private int m_currentAttack = 0;
     private float m_timeSinceAttack = 0.0f;
     private float m_delayToIdle = 0.0f;
-
-    public bool isDead = false;
+    private int attackDamage = 1;
 
     // Use this for initialization
     void Start() {
@@ -39,7 +46,7 @@ public class PlayerController : MonoBehaviour {
         m_wallSensorL1 = transform.Find("WallSensor_L1").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL2 = transform.Find("WallSensor_L2").GetComponent<Sensor_HeroKnight>();
         playerAttack = gameObject.GetComponent<PlayerAttack>();
-        livesManager = gameObject.GetComponent<HealthManager>();
+        healthManager = gameObject.GetComponent<HealthManager>();
     }
 
     // Update is called once per frame
@@ -67,9 +74,11 @@ public class PlayerController : MonoBehaviour {
             if(inputX > 0) {
                 GetComponent<SpriteRenderer>().flipX = false;
                 m_facingDirection = 1;
+                blocking = false;
             } else if(inputX < 0) {
                 GetComponent<SpriteRenderer>().flipX = true;
                 m_facingDirection = -1;
+                blocking = false;
             }
 
             // Move
@@ -86,6 +95,7 @@ public class PlayerController : MonoBehaviour {
             //Attack
             if(Input.GetMouseButtonDown(0) && m_timeSinceAttack > 0.25f && !m_rolling) {
                 m_currentAttack++;
+                blocking = false;
 
                 // Loop back to one after third attack
                 if(m_currentAttack > 3)
@@ -102,16 +112,20 @@ public class PlayerController : MonoBehaviour {
                 m_timeSinceAttack = 0.0f;
             }
 
-            // Block
+            //Blocking Setter
             else if(Input.GetMouseButtonDown(1) && !m_rolling) {
-                m_animator.SetTrigger("Block");
+                m_animator.SetTrigger("BeginBlock");
                 m_animator.SetBool("IdleBlock", true);
-            } else if(Input.GetMouseButtonUp(1))
-                m_animator.SetBool("IdleBlock", false);
+                blocking = true;
+            } else if(Input.GetMouseButtonUp(1)) {
+                blocking = false;
+            }
 
-            // Roll
+
+            //Roll
             else if(Input.GetKeyDown("left shift") && !m_rolling) {
                 m_rolling = true;
+                blocking = false;
                 m_animator.SetTrigger("Roll");
                 m_body2d.velocity = new Vector2(m_facingDirection * m_rollForce, m_body2d.velocity.y);
             }
@@ -121,6 +135,7 @@ public class PlayerController : MonoBehaviour {
             else if(Input.GetKeyDown("space") && m_grounded && !m_rolling) {
                 m_animator.SetTrigger("Jump");
                 m_grounded = false;
+                blocking = false;
                 m_animator.SetBool("Grounded", m_grounded);
                 m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_jumpForce);
                 m_groundSensor.Disable(0.2f);
@@ -140,21 +155,41 @@ public class PlayerController : MonoBehaviour {
                 if(m_delayToIdle < 0)
                     m_animator.SetInteger("AnimState", 0);
             }
+
+            //Block stop
+            if(!blocking) {
+                m_animator.SetBool("IdleBlock", false);
+            }
+        }
+    }
+
+    //Powerup Collisions
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if(collision.CompareTag("Powerup") && currentPowerup == PowerupType.None) {
+            currentPowerup = collision.gameObject.GetComponent<Powerup>().powerupType;
+            if(currentPowerup == PowerupType.Sword) {
+                StartCoroutine(SwordPowerup());
+            }
+            Destroy(collision.gameObject);
         }
     }
 
     //called by the animation at proper moment in attack animation
     public void AttackTrigger() {
-        playerAttack.Attack(m_facingDirection);
+        playerAttack.Attack(attackDamage, m_facingDirection);
     }
     //called by attack to have the attack recipient take damage
-    public void TakeDamage(int damage) {
+    public void TakeDamage(int damage, int enemyFacingDirection) {
         if(!isDead && !m_rolling) {
-            livesManager.UpdateLives(1);
-            m_animator.SetTrigger("Hurt"); //play hurt animation
-            if(livesManager.currentLives <= 0) {
-                isDead = true;
-                StartCoroutine("Die");
+            if(blocking && enemyFacingDirection == -m_facingDirection) { //if the player is blocking and facing the opposite direction as the enemy
+                m_animator.SetTrigger("Block");
+            } else { //get hit
+                healthManager.UpdateLives(1);
+                m_animator.SetTrigger("Hurt"); //play hurt animation
+                if(healthManager.currentLives <= 0) {
+                    isDead = true;
+                    StartCoroutine("Die");
+                }
             }
         }
     }
@@ -185,5 +220,15 @@ public class PlayerController : MonoBehaviour {
             // Turn arrow in correct direction
             dust.transform.localScale = new Vector3(m_facingDirection, 1, 1);
         }
+    }
+
+
+    //Sword Powerup
+    IEnumerator SwordPowerup() {
+        attackDamage = 2;
+        swordPowerupIndicator.SetActive(true);
+        yield return new WaitForSeconds(10);
+        attackDamage = 1;
+        swordPowerupIndicator.SetActive(false);
     }
 }

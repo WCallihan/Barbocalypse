@@ -8,6 +8,7 @@ public class SpawnManager : MonoBehaviour {
     [SerializeField] Transform rightSpawn;
     [SerializeField] GameObject enemyPrefab;
     [SerializeField] int maxEnemies;
+    [SerializeField] GameObject[] powerupPrefabs;
 
     private GameManager gameManager;
     private float minWait = 1f, maxWait = 3f;
@@ -18,6 +19,9 @@ public class SpawnManager : MonoBehaviour {
         gameManager = gameObject.GetComponent<GameManager>();
         waitingToSpawnLeft = false;
         waitingToSpawnRight = false;
+        int powerupIndex = Random.Range(0, powerupPrefabs.Length);
+        Vector3 powerupSpawn = new Vector3(Random.Range(leftSpawn.transform.position.x, rightSpawn.transform.position.x), 0.7f, 0);
+        Instantiate(powerupPrefabs[powerupIndex], powerupSpawn, powerupPrefabs[powerupIndex].transform.rotation);
     }
 
     // Update is called once per frame
