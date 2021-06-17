@@ -3,39 +3,43 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour {
 
-    [SerializeField] float      m_speed;
-    [SerializeField] float      m_jumpForce;
-    [SerializeField] Vector2    moveVector;
-    [SerializeField] float      attackCooldown;
-    [SerializeField] float      attackDistance;
-    [SerializeField] int        maxHealth = 2;
-    [SerializeField] int        pointsValue = 10;
+    [SerializeField] float m_speed;
+    [SerializeField] float m_jumpForce;
+    [SerializeField] Vector2 moveVector;
+    [SerializeField] float attackCooldown;
+    [SerializeField] float attackDistance;
+    [SerializeField] int maxHealth = 2;
+    [SerializeField] int pointsValue = 10;
+
+    [SerializeField] AudioClip hurtSound;
 
     private GameManager gameManager;
-    private Animator            m_animator;
-    private Rigidbody2D         m_body2d;
-    private GameObject          player;
+    private Animator m_animator;
+    private Rigidbody2D m_body2d;
+    private GameObject player;
     private EnemyAttack enemyAttack;
+    private AudioSource audioSource;
 
-    private int                 currentHealth;
-    private bool                m_combatIdle = false;
-    private bool                m_isDead = false;
-    private bool                attacking = false;
-    private bool                touchingPlayer = false;
+    private int currentHealth;
+    private bool m_combatIdle = false;
+    private bool m_isDead = false;
+    private bool attacking = false;
+    private bool touchingPlayer = false;
     private int facingDirection = 1;
 
     // Use this for initialization
-    void Start () {
+    void Start() {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         m_animator = GetComponent<Animator>();
         m_body2d = GetComponent<Rigidbody2D>();
         player = GameObject.Find("Player");
         enemyAttack = gameObject.GetComponent<EnemyAttack>();
+        audioSource = gameObject.GetComponent<AudioSource>();
         currentHealth = maxHealth;
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update() {
         if(gameManager.gameRunning && !m_isDead) {
             // -- find direction to the player --
             moveVector = (player.transform.position - transform.position);
@@ -68,16 +72,19 @@ public class EnemyController : MonoBehaviour {
             }
 
             //Run
-            if(Mathf.Abs(moveVector.magnitude) > Mathf.Epsilon && !touchingPlayer)
+            if(Mathf.Abs(moveVector.magnitude) > Mathf.Epsilon && !touchingPlayer) {
                 m_animator.SetInteger("AnimState", 2);
+            }
 
             //Combat Idle
-            else if(m_combatIdle)
+            else if(m_combatIdle) {
                 m_animator.SetInteger("AnimState", 1);
+            }
 
             //Idle
-            else
+            else {
                 m_animator.SetInteger("AnimState", 0);
+            }
         } else {
             m_animator.SetInteger("AnimState", 0); //idle when the player dies/game is not running
         }
@@ -91,7 +98,8 @@ public class EnemyController : MonoBehaviour {
     public void TakeDamage(int damage) {
         if(!m_isDead) {
             currentHealth -= damage;
-            m_animator.SetTrigger("Hurt"); //play hurt animation
+            m_animator.SetTrigger("Hurt");
+            audioSource.PlayOneShot(hurtSound);
             if(currentHealth <= 0) {
                 m_isDead = true;
                 StartCoroutine("Die");

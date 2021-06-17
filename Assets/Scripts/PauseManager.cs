@@ -18,9 +18,9 @@ public class PauseManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if(Input.GetKeyDown(KeyCode.P) && !isPaused && gameManager.gameRunning) {
+        if(Input.GetKeyDown(KeyCode.Escape) && !isPaused && gameManager.gameRunning) {
             PauseGame();
-        } else if(Input.GetKeyDown(KeyCode.P) && isPaused && gameManager.gameRunning) {
+        } else if(Input.GetKeyDown(KeyCode.Escape) && isPaused) {
             ResumeGame();
         }
     }

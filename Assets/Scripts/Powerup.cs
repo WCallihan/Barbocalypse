@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PowerupType { None, Sword }
+public enum PowerupType { None, Sword, Shield }
 
 public class Powerup : MonoBehaviour {
 

@@ -18,11 +18,11 @@ public class MoveLeft : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         //constantly moves left while game is running
-        transform.Translate(Vector2.left * Time.deltaTime * speed);
+        transform.Translate(Vector3.left * Time.deltaTime * speed);
 
         //teleports the object back to the right bound when it reaches the left bound
         if(transform.position.x <= leftBound) {
-            transform.position = new Vector2(rightBound, transform.position.y);
+            transform.position = new Vector3(rightBound, transform.position.y, transform.position.z);
         }
     }
 }

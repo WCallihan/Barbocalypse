@@ -9,12 +9,16 @@ public class GameManager : MonoBehaviour {
 
     [SerializeField] GameObject startScreen;
     [SerializeField] GameObject restartScreen;
+    [SerializeField] GameObject creditsScreen;
+    [SerializeField] GameObject optionsScreen;
     [SerializeField] GameObject scoreDisplay;
     [SerializeField] TextMeshProUGUI scoreValueText;
     [SerializeField] TextMeshProUGUI endScoreText;
     [SerializeField] GameObject livesDisplay;
+    [SerializeField] TextMeshProUGUI timerText;
 
     private PlayerController playerController;
+    private int gameTime = 60;
     
     public bool gameRunning;
     public int score;
@@ -31,6 +35,8 @@ public class GameManager : MonoBehaviour {
         if(playerController.isDead) {
             gameRunning = false;
             restartScreen.SetActive(true);
+            scoreDisplay.SetActive(false);
+            timerText.gameObject.SetActive(false);
         }
     }
 
@@ -40,6 +46,7 @@ public class GameManager : MonoBehaviour {
         startScreen.SetActive(false);
         scoreDisplay.SetActive(true);
         livesDisplay.SetActive(true);
+        StartCoroutine("GameTimer");
     }
     //triggered when the restart button is pressed
     public void RestartGame() {
@@ -51,5 +58,30 @@ public class GameManager : MonoBehaviour {
         score += addScore;
         scoreValueText.text = "" + score;
         endScoreText.text = "Score: " + score;
+    }
+
+    //not the same as RestartGame(); to be used for the various menu screens only, not to restart the game
+    public void MenuReturn() {
+        creditsScreen.SetActive(false);
+        optionsScreen.SetActive(false);
+        startScreen.SetActive(true);
+    }
+    public void OptionsScreen() {
+        startScreen.SetActive(false);
+        optionsScreen.SetActive(true);
+    }
+    public void CreditsScreen() {
+        startScreen.SetActive(false);
+        creditsScreen.SetActive(true);
+    }
+
+    IEnumerator GameTimer() {
+        timerText.gameObject.SetActive(true);
+        timerText.text = "" + gameTime;
+        while(gameTime > 0 && gameRunning) {
+            yield return new WaitForSeconds(1);
+            gameTime--;
+            timerText.text = "" + gameTime;
+        }
     }
 }

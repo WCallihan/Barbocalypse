@@ -10,6 +10,12 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] GameObject m_slideDust;
 
     [SerializeField] GameObject swordPowerupIndicator;
+    [SerializeField] GameObject leftShieldPowerupIndicator;
+    [SerializeField] GameObject rightShieldPowerupIndicator;
+
+    [SerializeField] AudioClip[] swordSwingSounds;
+    [SerializeField] AudioClip hurtSound;
+    [SerializeField] AudioClip blockSound;
 
     private GameManager gameManager;
     private Animator m_animator;
@@ -21,8 +27,10 @@ public class PlayerController : MonoBehaviour {
     private Sensor_HeroKnight m_wallSensorL2;
     private PlayerAttack playerAttack;
     private HealthManager healthManager;
+    private AudioSource audioSource;
 
     private PowerupType currentPowerup = PowerupType.None;
+    private Collider2D touchingPowerup;
 
     private bool m_grounded = false;
     private bool m_rolling = false;
@@ -34,6 +42,8 @@ public class PlayerController : MonoBehaviour {
     private float m_timeSinceAttack = 0.0f;
     private float m_delayToIdle = 0.0f;
     private int attackDamage = 1;
+
+    private float lastFrameInputX = 0;
 
     // Use this for initialization
     void Start() {
@@ -47,6 +57,7 @@ public class PlayerController : MonoBehaviour {
         m_wallSensorL2 = transform.Find("WallSensor_L2").GetComponent<Sensor_HeroKnight>();
         playerAttack = gameObject.GetComponent<PlayerAttack>();
         healthManager = gameObject.GetComponent<HealthManager>();
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -73,17 +84,21 @@ public class PlayerController : MonoBehaviour {
             // Swap direction of sprite depending on walk direction
             if(inputX > 0) {
                 GetComponent<SpriteRenderer>().flipX = false;
-                m_facingDirection = 1;
-                blocking = false;
+                m_facingDirection = 1; //facing right
             } else if(inputX < 0) {
                 GetComponent<SpriteRenderer>().flipX = true;
-                m_facingDirection = -1;
+                m_facingDirection = -1; //facing left
+            }
+            // Check if the player is starting to move; if so, cancel block
+            if(Mathf.Abs(lastFrameInputX) < Mathf.Abs(inputX)) {
                 blocking = false;
             }
+            lastFrameInputX = inputX;
 
             // Move
-            if(!m_rolling)
+            if(!m_rolling) {
                 m_body2d.velocity = new Vector2(inputX * m_speed, m_body2d.velocity.y);
+            }
 
             //Set AirSpeed in animator
             m_animator.SetFloat("AirSpeedY", m_body2d.velocity.y);
@@ -107,6 +122,8 @@ public class PlayerController : MonoBehaviour {
 
                 // Call one of three attack animations "Attack1", "Attack2", "Attack3"
                 m_animator.SetTrigger("Attack" + m_currentAttack); //actual attack triggered by animation
+                // Play attack sound depending on the attack number
+                audioSource.PlayOneShot(swordSwingSounds[m_currentAttack - 1]);
 
                 // Reset timer
                 m_timeSinceAttack = 0.0f;
@@ -121,7 +138,6 @@ public class PlayerController : MonoBehaviour {
                 blocking = false;
             }
 
-
             //Roll
             else if(Input.GetKeyDown("left shift") && !m_rolling) {
                 m_rolling = true;
@@ -129,7 +145,6 @@ public class PlayerController : MonoBehaviour {
                 m_animator.SetTrigger("Roll");
                 m_body2d.velocity = new Vector2(m_facingDirection * m_rollForce, m_body2d.velocity.y);
             }
-
 
             //Jump
             else if(Input.GetKeyDown("space") && m_grounded && !m_rolling) {
@@ -160,17 +175,44 @@ public class PlayerController : MonoBehaviour {
             if(!blocking) {
                 m_animator.SetBool("IdleBlock", false);
             }
+
+
+            //Powerup Pickup
+            if(touchingPowerup != null && Input.GetAxis("Vertical") < 0) {
+                currentPowerup = touchingPowerup.gameObject.GetComponent<Powerup>().powerupType;
+                if(currentPowerup == PowerupType.Sword) {
+                    StartCoroutine(SwordPowerup());
+                }
+                if(currentPowerup == PowerupType.Shield) {
+                    leftShieldPowerupIndicator.SetActive(true);
+                    rightShieldPowerupIndicator.SetActive(true);
+                }
+                Destroy(touchingPowerup.gameObject);
+            }
+
+            //Shield Powerup stop
+            if(currentPowerup == PowerupType.Shield && !leftShieldPowerupIndicator.activeInHierarchy && !rightShieldPowerupIndicator.activeInHierarchy) {
+                currentPowerup = PowerupType.None;
+            } else if(currentPowerup != PowerupType.Shield) {
+                if(leftShieldPowerupIndicator.activeInHierarchy) {
+                    leftShieldPowerupIndicator.SetActive(false);
+                }
+                if(rightShieldPowerupIndicator.activeInHierarchy) {
+                    rightShieldPowerupIndicator.SetActive(false);
+                }
+            }
         }
     }
 
     //Powerup Collisions
     private void OnTriggerEnter2D(Collider2D collision) {
-        if(collision.CompareTag("Powerup") && currentPowerup == PowerupType.None) {
-            currentPowerup = collision.gameObject.GetComponent<Powerup>().powerupType;
-            if(currentPowerup == PowerupType.Sword) {
-                StartCoroutine(SwordPowerup());
-            }
-            Destroy(collision.gameObject);
+        if(collision.CompareTag("Powerup")) {
+            touchingPowerup = collision;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision) {
+        if(collision.CompareTag("Powerup")) {
+            touchingPowerup = null;
         }
     }
 
@@ -181,23 +223,21 @@ public class PlayerController : MonoBehaviour {
     //called by attack to have the attack recipient take damage
     public void TakeDamage(int damage, int enemyFacingDirection) {
         if(!isDead && !m_rolling) {
-            if(blocking && enemyFacingDirection == -m_facingDirection) { //if the player is blocking and facing the opposite direction as the enemy
+            if(currentPowerup == PowerupType.Shield && CheckShieldPowerupBlock(enemyFacingDirection)) { //shield powerup blocks the attack, actions handled by coroutines
+            } else if(blocking && enemyFacingDirection == -m_facingDirection) { //if the player is blocking and facing the opposite direction as the enemy
                 m_animator.SetTrigger("Block");
-            } else { //get hit
+                audioSource.PlayOneShot(blockSound);
+            } else { //gets hit
                 healthManager.UpdateLives(1);
-                m_animator.SetTrigger("Hurt"); //play hurt animation
-                if(healthManager.currentLives <= 0) {
+                m_animator.SetTrigger("Hurt");
+                audioSource.PlayOneShot(hurtSound);
+                if(healthManager.currentLives <= 0) { //DIE
                     isDead = true;
-                    StartCoroutine("Die");
+                    m_animator.SetBool("noBlood", m_noBlood);
+                    m_animator.SetBool("Dead", true);
                 }
             }
         }
-    }
-    //called by take damage when the enemy dies, plays animation and sets the boolean
-    IEnumerator Die() {
-        m_animator.SetBool("noBlood", m_noBlood);
-        m_animator.SetBool("Dead", true); //play death animation
-        yield return new WaitForSeconds(5);
     }
 
     // Animation Events
@@ -221,14 +261,36 @@ public class PlayerController : MonoBehaviour {
             dust.transform.localScale = new Vector3(m_facingDirection, 1, 1);
         }
     }
+    //Blood toggled on and off in options menu
+    public void SetBlood(bool blood) {
+        m_noBlood = !blood;
+    }
 
 
-    //Sword Powerup
+    //Sword Powerup - doubles player damage for 10 seconds
     IEnumerator SwordPowerup() {
         attackDamage = 2;
         swordPowerupIndicator.SetActive(true);
         yield return new WaitForSeconds(10);
         attackDamage = 1;
         swordPowerupIndicator.SetActive(false);
+        currentPowerup = PowerupType.None;
+    }
+    //Checks whether the current Shield Powerup can Block the attack; if so, blocks it and destroys that shield
+    bool CheckShieldPowerupBlock(int enemyFacingDirection) {
+        if(enemyFacingDirection == 1) { //enemy facing right
+            if(leftShieldPowerupIndicator.activeInHierarchy) {
+                audioSource.PlayOneShot(blockSound);
+                leftShieldPowerupIndicator.SetActive(false);
+                return true;
+            }
+        } else if(enemyFacingDirection == -1) { //enemy facing left
+            if(rightShieldPowerupIndicator.activeInHierarchy) {
+                audioSource.PlayOneShot(blockSound);
+                rightShieldPowerupIndicator.SetActive(false);
+                return true;
+            }
+        }
+        return false;
     }
 }
