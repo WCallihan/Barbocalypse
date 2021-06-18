@@ -6,7 +6,7 @@ public class SpawnManager : MonoBehaviour {
 
     [SerializeField] Transform leftSpawn;
     [SerializeField] Transform rightSpawn;
-    [SerializeField] GameObject enemyPrefab;
+    [SerializeField] GameObject[] enemyPrefabs;
     [SerializeField] int maxEnemies;
     [SerializeField] GameObject[] powerupPrefabs;
     [SerializeField] int maxPowerups;
@@ -37,13 +37,14 @@ public class SpawnManager : MonoBehaviour {
     IEnumerator SpawnEnemy() {
         float waitTimer = Random.Range(minEnemyWait, maxEnemyWait);
         int spawnSide = Random.Range(0, 2);
+        int enemyIndex = Random.Range(0, enemyPrefabs.Length);
 
         waitingToSpawnEnemy = true;
         yield return new WaitForSeconds(waitTimer);
         if(spawnSide == 0) { //spawn on left side
-            Instantiate(enemyPrefab, leftSpawn);
+            Instantiate(enemyPrefabs[enemyIndex], leftSpawn);
         } else if(spawnSide == 1) { //spawn on right side
-            Instantiate(enemyPrefab, rightSpawn);
+            Instantiate(enemyPrefabs[enemyIndex], rightSpawn);
         } else {
             Debug.Log("spawn failed");
         }

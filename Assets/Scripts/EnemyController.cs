@@ -4,7 +4,6 @@ using System.Collections;
 public class EnemyController : MonoBehaviour {
 
     [SerializeField] float m_speed;
-    [SerializeField] float m_jumpForce;
     [SerializeField] Vector2 moveVector;
     [SerializeField] float attackCooldown;
     [SerializeField] float attackDistance;
@@ -35,6 +34,7 @@ public class EnemyController : MonoBehaviour {
         player = GameObject.Find("Player");
         enemyAttack = gameObject.GetComponent<EnemyAttack>();
         audioSource = gameObject.GetComponent<AudioSource>();
+        audioSource.volume = PlayerPrefs.GetFloat("EffectsVolume", 1);
         currentHealth = maxHealth;
     }
 

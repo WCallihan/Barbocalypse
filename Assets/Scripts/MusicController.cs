@@ -14,6 +14,7 @@ public class MusicController : MonoBehaviour {
     void Start() {
         audioSource = gameObject.GetComponent<AudioSource>();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        audioSource.volume = PlayerPrefs.GetFloat("MusicVolume", 1);
         audioSource.clip = menuMusic;
         audioSource.Play();
     }

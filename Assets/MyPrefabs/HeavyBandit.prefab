@@ -28,7 +28,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6078109918693273692}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5922602784338165480
 GameObject:
@@ -58,7 +58,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6078109918693273692}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6074431941025222430
 GameObject:
@@ -70,11 +70,11 @@ GameObject:
   m_Component:
   - component: {fileID: 6078109918693273692}
   - component: {fileID: 6183735791717479552}
+  - component: {fileID: 1284407041328663175}
   - component: {fileID: 6133226144801956806}
   - component: {fileID: 6249583786941888760}
   - component: {fileID: 6123926710060702480}
   - component: {fileID: 6093501398601745514}
-  - component: {fileID: 1284407041328663175}
   - component: {fileID: 3295633738996210055}
   m_Layer: 7
   m_Name: HeavyBandit
@@ -94,8 +94,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.1, y: 1.1, z: 1}
   m_Children:
-  - {fileID: 7262988286084488369}
   - {fileID: 6649787270048895846}
+  - {fileID: 7262988286084488369}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -112,13 +112,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_speed: 2
-  m_jumpForce: 7.5
   moveVector: {x: 0, y: 0}
   attackCooldown: 2
   attackDistance: 1.5
   maxHealth: 2
   pointsValue: 10
   hurtSound: {fileID: 8300000, guid: 28035043174d44f928d428fc44f59150, type: 3}
+--- !u!114 &1284407041328663175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6074431941025222430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd0e8478c0092c747a2af977e1bc9142, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRightPos: {fileID: 7262988286084488369}
+  attackLeftPos: {fileID: 6649787270048895846}
+  attackRange: 0.5
+  enemyLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  attackDamage: 1
 --- !u!95 &6133226144801956806
 Animator:
   serializedVersion: 3
@@ -236,25 +254,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.8, y: 1.2}
   m_EdgeRadius: 0
---- !u!114 &1284407041328663175
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6074431941025222430}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd0e8478c0092c747a2af977e1bc9142, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackRightPos: {fileID: 7262988286084488369}
-  attackLeftPos: {fileID: 6649787270048895846}
-  attackRange: 0.5
-  enemyLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  attackDamage: 1
 --- !u!82 &3295633738996210055
 AudioSource:
   m_ObjectHideFlags: 0
@@ -267,7 +266,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0
+  m_Volume: 0.50714284
   m_Pitch: 1
   Loop: 0
   Mute: 0

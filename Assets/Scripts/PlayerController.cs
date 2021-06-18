@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float m_speed = 4.0f;
     [SerializeField] float m_jumpForce = 7.5f;
     [SerializeField] float m_rollForce = 6.0f;
-    [SerializeField] bool m_noBlood = false;
+    [SerializeField] bool m_blood;
     [SerializeField] GameObject m_slideDust;
 
     [SerializeField] GameObject swordPowerupIndicator;
@@ -58,6 +58,9 @@ public class PlayerController : MonoBehaviour {
         playerAttack = gameObject.GetComponent<PlayerAttack>();
         healthManager = gameObject.GetComponent<HealthManager>();
         audioSource = gameObject.GetComponent<AudioSource>();
+
+        audioSource.volume = PlayerPrefs.GetFloat("EffectsVolume");
+        m_blood = (PlayerPrefs.GetInt("BloodToggle") == 1);
     }
 
     // Update is called once per frame
@@ -233,7 +236,7 @@ public class PlayerController : MonoBehaviour {
                 audioSource.PlayOneShot(hurtSound);
                 if(healthManager.currentLives <= 0) { //DIE
                     isDead = true;
-                    m_animator.SetBool("noBlood", m_noBlood);
+                    m_animator.SetBool("Blood", m_blood);
                     m_animator.SetBool("Dead", true);
                 }
             }
@@ -263,7 +266,7 @@ public class PlayerController : MonoBehaviour {
     }
     //Blood toggled on and off in options menu
     public void SetBlood(bool blood) {
-        m_noBlood = !blood;
+        m_blood = blood;
     }
 
 
