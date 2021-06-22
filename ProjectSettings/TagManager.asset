@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Powerup
   - Enemy
+  - Environment
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -16,7 +18,7 @@ TagManager:
   - Player
   - Enemy
   - Dead
-  - 
+  - Projectile
   - 
   - 
   - 

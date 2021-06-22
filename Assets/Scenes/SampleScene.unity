@@ -13245,13 +13245,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftSpawn: {fileID: 310852611}
   rightSpawn: {fileID: 1828755831}
-  enemyPrefabs:
-  - {fileID: 6074431941025222430, guid: 2ac026faf189c7d4896a7ebf52551bcc, type: 3}
-  - {fileID: 8892557441877855125, guid: 328b5bbb5e00dd646b1e35bc1efb6f37, type: 3}
+  barbarianPrefab: {fileID: 6074431941025222430, guid: 2ac026faf189c7d4896a7ebf52551bcc, type: 3}
+  skeletonPrefab: {fileID: 8892557441877855125, guid: 328b5bbb5e00dd646b1e35bc1efb6f37, type: 3}
   maxEnemies: 5
   powerupPrefabs:
   - {fileID: 601791683322902649, guid: 104a57c85c250264aad335db7d5bde09, type: 3}
   - {fileID: 14474095175117983, guid: 845be2cbcd0ab844ca6659a1a2003f07, type: 3}
+  - {fileID: 971552098822520354, guid: fc907cee16eec774c88e72f0a445a3d4, type: 3}
   maxPowerups: 2
 --- !u!4 &1721539407
 Transform:
@@ -13460,7 +13460,7 @@ GameObject:
   - component: {fileID: 1825615831}
   m_Layer: 0
   m_Name: Ground and Walls
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

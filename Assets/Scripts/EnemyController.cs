@@ -10,6 +10,7 @@ public class EnemyController : MonoBehaviour {
     [SerializeField] int maxHealth = 2;
     [SerializeField] int pointsValue = 10;
 
+    [SerializeField] AudioClip swordSwipe;
     [SerializeField] AudioClip hurtSound;
 
     private GameManager gameManager;
@@ -68,6 +69,7 @@ public class EnemyController : MonoBehaviour {
             if(touchingPlayer && !attacking) {
                 attacking = true;
                 m_animator.SetTrigger("Attack"); //actual attack triggered by animation
+                audioSource.PlayOneShot(swordSwipe);
                 StartCoroutine("AttackCooldown");
             }
 

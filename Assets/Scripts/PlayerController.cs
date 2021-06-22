@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] GameObject swordPowerupIndicator;
     [SerializeField] GameObject leftShieldPowerupIndicator;
     [SerializeField] GameObject rightShieldPowerupIndicator;
+    [SerializeField] GameObject projectilePowerupIndicator;
+    [SerializeField] GameObject[] swordProjectiles;
 
     [SerializeField] AudioClip[] swordSwingSounds;
     [SerializeField] AudioClip hurtSound;
@@ -35,9 +37,10 @@ public class PlayerController : MonoBehaviour {
     private bool m_grounded = false;
     private bool m_rolling = false;
     private bool blocking = false;
-    public bool isDead = false;
 
-    private int m_facingDirection = 1;
+    public bool isDead = false;
+    public int m_facingDirection = 1;
+
     private int m_currentAttack = 0;
     private float m_timeSinceAttack = 0.0f;
     private float m_delayToIdle = 0.0f;
@@ -190,6 +193,9 @@ public class PlayerController : MonoBehaviour {
                     leftShieldPowerupIndicator.SetActive(true);
                     rightShieldPowerupIndicator.SetActive(true);
                 }
+                if(currentPowerup == PowerupType.Projectile) {
+                    StartCoroutine(ProjectilePowerup());
+                }
                 Destroy(touchingPowerup.gameObject);
             }
 
@@ -219,9 +225,14 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    //called by the animation at proper moment in attack animation
+    //called by the animation at proper moment in attack animation; calls Attack and launches projectiles
     public void AttackTrigger() {
         playerAttack.Attack(attackDamage, m_facingDirection);
+        if(currentPowerup == PowerupType.Projectile) {
+            GameObject projectileToSpawn = swordProjectiles[m_currentAttack - 1];
+            Vector3 spawnOffset = projectileToSpawn.GetComponent<ProjectilePowerup>().spawnOffset;
+            Instantiate(projectileToSpawn, transform.position + new Vector3(spawnOffset.x * m_facingDirection, spawnOffset.y, spawnOffset.z), projectileToSpawn.transform.rotation);
+        }
     }
     //called by attack to have the attack recipient take damage
     public void TakeDamage(int damage, int enemyFacingDirection) {
@@ -279,7 +290,7 @@ public class PlayerController : MonoBehaviour {
         swordPowerupIndicator.SetActive(false);
         currentPowerup = PowerupType.None;
     }
-    //Checks whether the current Shield Powerup can Block the attack; if so, blocks it and destroys that shield
+    // Shield Powerup - checks whether the current Shield Powerup can Block the attack; if so, blocks it and destroys that shield
     bool CheckShieldPowerupBlock(int enemyFacingDirection) {
         if(enemyFacingDirection == 1) { //enemy facing right
             if(leftShieldPowerupIndicator.activeInHierarchy) {
@@ -295,5 +306,12 @@ public class PlayerController : MonoBehaviour {
             }
         }
         return false;
+    }
+    //Projectile Powerup - shoots wind projectiles that hurt all enemies in one direction
+    IEnumerator ProjectilePowerup() {
+        projectilePowerupIndicator.SetActive(true);
+        yield return new WaitForSeconds(30);
+        projectilePowerupIndicator.SetActive(false);
+        currentPowerup = PowerupType.None;
     }
 }
