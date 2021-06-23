@@ -106,9 +106,6 @@ public class PlayerController : MonoBehaviour {
                 m_body2d.velocity = new Vector2(inputX * m_speed, m_body2d.velocity.y);
             }
 
-            //Set AirSpeed in animator
-            m_animator.SetFloat("AirSpeedY", m_body2d.velocity.y);
-
             // -- Handle Animations --
             //Wall Slide
             m_animator.SetBool("WallSlide", (m_wallSensorR1.State() && m_wallSensorR2.State()) || (m_wallSensorL1.State() && m_wallSensorL2.State()));
@@ -285,7 +282,7 @@ public class PlayerController : MonoBehaviour {
     IEnumerator SwordPowerup() {
         attackDamage = 2;
         swordPowerupIndicator.SetActive(true);
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(15);
         attackDamage = 1;
         swordPowerupIndicator.SetActive(false);
         currentPowerup = PowerupType.None;
@@ -310,7 +307,7 @@ public class PlayerController : MonoBehaviour {
     //Projectile Powerup - shoots wind projectiles that hurt all enemies in one direction
     IEnumerator ProjectilePowerup() {
         projectilePowerupIndicator.SetActive(true);
-        yield return new WaitForSeconds(30);
+        yield return new WaitForSeconds(20);
         projectilePowerupIndicator.SetActive(false);
         currentPowerup = PowerupType.None;
     }

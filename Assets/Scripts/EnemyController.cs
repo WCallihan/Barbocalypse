@@ -22,10 +22,11 @@ public class EnemyController : MonoBehaviour {
 
     private int currentHealth;
     private bool m_combatIdle = false;
-    private bool m_isDead = false;
     private bool attacking = false;
     private bool touchingPlayer = false;
     private int facingDirection = 1;
+
+    public bool m_isDead = false;
 
     // Use this for initialization
     void Start() {
@@ -60,8 +61,10 @@ public class EnemyController : MonoBehaviour {
             } else {
                 touchingPlayer = false;
             }
-            if(!touchingPlayer) {
+            if(!touchingPlayer && !attacking) {
                 m_body2d.velocity = moveVector.normalized * new Vector2(m_speed, 0);
+            } else {
+                m_body2d.velocity = Vector2.zero;
             }
 
             // -- Handle Animations --

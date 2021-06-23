@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class EnemyAttack : MonoBehaviour {
 
-    [SerializeField] Transform attackRightPos;
     [SerializeField] Transform attackLeftPos;
+    [SerializeField] Transform attackRightPos;
     [SerializeField] float attackRange = 0.5f;
     [SerializeField] LayerMask enemyLayers;
     [SerializeField] int attackDamage = 1;

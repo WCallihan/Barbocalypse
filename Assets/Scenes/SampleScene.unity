@@ -807,10 +807,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 715, y: 600}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -1105,6 +1105,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1037772693909760120, guid: af76221ee41488943883c2dd608f7f06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1397301622331744389, guid: af76221ee41488943883c2dd608f7f06, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -1149,6 +1153,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3423861227400827888, guid: af76221ee41488943883c2dd608f7f06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3487113649005407442, guid: af76221ee41488943883c2dd608f7f06, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1165,6 +1173,14 @@ PrefabInstance:
       propertyPath: life3
       value: 
       objectReference: {fileID: 918409975}
+    - target: {fileID: 8612590955213830561, guid: af76221ee41488943883c2dd608f7f06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8966347922678458600, guid: af76221ee41488943883c2dd608f7f06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af76221ee41488943883c2dd608f7f06, type: 3}
 --- !u!1 &286500640
@@ -5697,7 +5713,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -26.4144, y: -18.799}
+  m_AnchoredPosition: {x: -26.414429, y: -18.799011}
   m_SizeDelta: {x: 52.8287, y: 37.5979}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1343048603
@@ -13247,6 +13263,8 @@ MonoBehaviour:
   rightSpawn: {fileID: 1828755831}
   barbarianPrefab: {fileID: 6074431941025222430, guid: 2ac026faf189c7d4896a7ebf52551bcc, type: 3}
   skeletonPrefab: {fileID: 8892557441877855125, guid: 328b5bbb5e00dd646b1e35bc1efb6f37, type: 3}
+  goblinPrefab: {fileID: 825305303356092137, guid: 864872072f124054d9a0ce751be96776, type: 3}
+  flyingeyePrefab: {fileID: 2068615888556428703, guid: fc0476c2856de9e4eb6e3be2b4f9e22f, type: 3}
   maxEnemies: 5
   powerupPrefabs:
   - {fileID: 601791683322902649, guid: 104a57c85c250264aad335db7d5bde09, type: 3}

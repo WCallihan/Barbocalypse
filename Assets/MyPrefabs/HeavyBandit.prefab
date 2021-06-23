@@ -71,8 +71,8 @@ GameObject:
   - component: {fileID: 6078109918693273692}
   - component: {fileID: 6183735791717479552}
   - component: {fileID: 1284407041328663175}
-  - component: {fileID: 6133226144801956806}
   - component: {fileID: 6249583786941888760}
+  - component: {fileID: 6133226144801956806}
   - component: {fileID: 6123926710060702480}
   - component: {fileID: 6093501398601745514}
   - component: {fileID: 3295633738996210055}
@@ -131,32 +131,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd0e8478c0092c747a2af977e1bc9142, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRightPos: {fileID: 7262988286084488369}
   attackLeftPos: {fileID: 6649787270048895846}
+  attackRightPos: {fileID: 7262988286084488369}
   attackRange: 0.5
   enemyLayers:
     serializedVersion: 2
     m_Bits: 64
   attackDamage: 1
---- !u!95 &6133226144801956806
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6074431941025222430}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: b810f2280bb2a6b4cbf996716e6e3d55, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!212 &6249583786941888760
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -208,6 +189,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &6133226144801956806
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6074431941025222430}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: b810f2280bb2a6b4cbf996716e6e3d55, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!50 &6123926710060702480
 Rigidbody2D:
   serializedVersion: 4
@@ -267,7 +267,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.35714287
+  m_Volume: 0.2554723
   m_Pitch: 1
   Loop: 0
   Mute: 0
