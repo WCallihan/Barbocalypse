@@ -579,9 +579,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f096ef5247e52f34c905ae7f865ebfe9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  life1: {fileID: 0}
-  life2: {fileID: 0}
-  life3: {fileID: 0}
+  lifePrefab: {fileID: 754428396016221502, guid: a01cfc242b36a024b8a884db7532d933, type: 3}
+  maxLives: 3
   currentLives: 0
 --- !u!95 &4862996306400397429
 Animator:

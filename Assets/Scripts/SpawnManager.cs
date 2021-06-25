@@ -18,17 +18,18 @@ public class SpawnManager : MonoBehaviour {
     private float minEnemyWait = 0.5f, maxEnemyWait = 3f;
     private bool waitingToSpawnEnemy;
     private bool waitingToSpawnPowerup;
+    private float powerupSpawnTime = 30;
 
     private float barbarianSpawnRate = 1;
     private float skeletonSpawnRate = 0;
     private float goblinSpawnRate = 0;
     private float flyingeyeSpawnRate = 0;
 
-    private float spawnRateTimer = 0;
-
-    private float nextSpawnRateChange = 20;
-    private float nextPowerupChange = 45;
-    private float powerupSpawnTime = 30;
+    private float spawnRateTimer;
+    private float maxEnemyTimer;
+    private float maxEnemyWaitTimer;
+    private float maxPowerupTimer;
+    private float powerupWaitTimer;
 
     // Start is called before the first frame update
     void Start() {
@@ -66,27 +67,30 @@ public class SpawnManager : MonoBehaviour {
                 goblinSpawnRate = Mathf.Lerp(0.25f, 0.3f, spawnRateTimer);
                 flyingeyeSpawnRate = 1 - barbarianSpawnRate - skeletonSpawnRate - goblinSpawnRate;
             }
-        }
 
-        //every 20 seconds, the max enemies is increased by 1 and the maximum enemy wait is decreased by 0.15 seconds
-        if(gameManager.gameTime >= nextSpawnRateChange) {
-            if(maxEnemies < 20) {
-                maxEnemies += 1;
+            //over 200 seconds, maximum enemies = 5 -> 15
+            if(maxEnemies < 15) {
+                maxEnemyTimer += Time.deltaTime / 200f; //hits 1 at 200 seconds
+                maxEnemies = (int)Mathf.Lerp(5, 15, maxEnemyTimer);
             }
+
+            //over 260 seconds, maximum enemy wait time = 3 sec -> 1 sec
             if(maxEnemyWait > 1f) {
-                maxEnemyWait -= 0.15f;
+                maxEnemyWaitTimer += Time.deltaTime / 260f;
+                maxEnemyWait = Mathf.Lerp(3f, 1f, maxEnemyWaitTimer);
             }
-            nextSpawnRateChange += 20;
-        }
-        //every 45 seconds, the max powerups increases by 1 up to 6, and decreases spawn time by 5 seconds down to 10 seconds
-        if(gameManager.gameTime >= nextPowerupChange) {
+
+            //over 180 seconds, maximum powerups = 2 -> 6
             if(maxPowerups < 6) {
-                maxPowerups++;
+                maxPowerupTimer += Time.deltaTime / 180f; //hits 1 at 180 seconds
+                maxPowerups = (int)Mathf.Lerp(2, 6, maxPowerupTimer);
             }
+
+            //over 180 seconds, powerup wait timer = 30 sec -> 10 sec
             if(powerupSpawnTime > 10) {
-                powerupSpawnTime -= 5;
+                powerupWaitTimer += Time.deltaTime / 180f; //hits 1 at 180 seconds
+                powerupSpawnTime = Mathf.Lerp(30, 10, powerupWaitTimer);
             }
-            nextPowerupChange += 45;
         }
 
         if(gameManager.gameRunning && !waitingToSpawnEnemy && GameObject.FindObjectsOfType<EnemyController>().Length < maxEnemies) { //only spawns more if the total number on the field don't exceed the max
@@ -134,11 +138,5 @@ public class SpawnManager : MonoBehaviour {
         waitingToSpawnPowerup = true;
         yield return new WaitForSeconds(powerupSpawnTime);
         waitingToSpawnPowerup = false;
-    }
-
-
-    void AdjustSpawnRate(ref float enemy1Prob, float adjustment, ref float enemy2Prob) {
-        enemy1Prob -= adjustment;
-        enemy2Prob += adjustment;
     }
 }

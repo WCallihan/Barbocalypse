@@ -239,7 +239,7 @@ public class PlayerController : MonoBehaviour {
                 m_animator.SetTrigger("Block");
                 audioSource.PlayOneShot(blockSound);
             } else { //gets hit
-                healthManager.UpdateLives(1);
+                healthManager.UpdateLives(damage);
                 m_animator.SetTrigger("Hurt");
                 audioSource.PlayOneShot(hurtSound);
                 if(healthManager.currentLives <= 0) { //DIE
@@ -278,14 +278,24 @@ public class PlayerController : MonoBehaviour {
     }
 
 
-    //Sword Powerup - doubles player damage for 10 seconds
+    //Sword Powerup - doubles player damage
     IEnumerator SwordPowerup() {
         attackDamage = 2;
         swordPowerupIndicator.SetActive(true);
-        yield return new WaitForSeconds(15);
+        float swordCooldown = 15;
+        while(swordCooldown > 0) {
+            if(currentPowerup != PowerupType.Sword) {
+                swordCooldown = 0;
+            } else {
+                yield return new WaitForSeconds(0.5f);
+                swordCooldown -= 0.5f;
+            }
+        }
         attackDamage = 1;
         swordPowerupIndicator.SetActive(false);
-        currentPowerup = PowerupType.None;
+        if(currentPowerup == PowerupType.Sword) {
+            currentPowerup = PowerupType.None;
+        }
     }
     // Shield Powerup - checks whether the current Shield Powerup can Block the attack; if so, blocks it and destroys that shield
     bool CheckShieldPowerupBlock(int enemyFacingDirection) {
@@ -307,8 +317,18 @@ public class PlayerController : MonoBehaviour {
     //Projectile Powerup - shoots wind projectiles that hurt all enemies in one direction
     IEnumerator ProjectilePowerup() {
         projectilePowerupIndicator.SetActive(true);
-        yield return new WaitForSeconds(20);
+        float projectileCooldown = 20;
+        while(projectileCooldown > 0) {
+            if(currentPowerup != PowerupType.Projectile) {
+                projectileCooldown = 0;
+            } else {
+                yield return new WaitForSeconds(0.5f);
+                projectileCooldown -= 0.5f;
+            }
+        }
         projectilePowerupIndicator.SetActive(false);
-        currentPowerup = PowerupType.None;
+        if(currentPowerup == PowerupType.Projectile) {
+            currentPowerup = PowerupType.None;
+        }
     }
 }

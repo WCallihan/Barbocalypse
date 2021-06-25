@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour {
     [SerializeField] TextMeshProUGUI scoreValueText;
     [SerializeField] TextMeshProUGUI endScoreText;
     [SerializeField] TextMeshProUGUI endHighScoreText;
-    [SerializeField] GameObject livesDisplay;
     [SerializeField] TextMeshProUGUI timerText;
 
     [SerializeField] SpriteRenderer background;
@@ -25,6 +24,7 @@ public class GameManager : MonoBehaviour {
     private float backgroundTimer = 0;
 
     private PlayerController playerController;
+    private HealthManager healthManager;
 
     public float gameTime = 0;
     public bool gameRunning;
@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        healthManager = GameObject.Find("Player").GetComponent<HealthManager>();
         gameRunning = false;
         originalColor = background.color;
     }
@@ -46,6 +47,17 @@ public class GameManager : MonoBehaviour {
         //gametimer keeps track of how long the player has been going
         if(gameRunning) {
             gameTime += Time.deltaTime;
+            int seconds = Mathf.RoundToInt(gameTime % 60);
+            int minutes = Mathf.FloorToInt(gameTime / 60);
+            string minutesString = null;
+            string secondsString = Mathf.RoundToInt(seconds).ToString();
+            if(minutes > 0) {
+                minutesString = minutes.ToString() + ":";
+                if(seconds < 10) {
+                    secondsString = "0" + secondsString;
+                }
+            }
+            timerText.text = minutesString + secondsString;
         }
 
         //stops the game when the player is dead
@@ -69,7 +81,8 @@ public class GameManager : MonoBehaviour {
         gameRunning = true;
         startScreen.SetActive(false);
         scoreDisplay.SetActive(true);
-        livesDisplay.SetActive(true);
+        timerText.gameObject.SetActive(true);
+        healthManager.SpawnLives();
     }
     //triggered when the restart button is pressed
     public void RestartGame() {
