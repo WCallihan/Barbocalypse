@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Used by the cloud objects
+ * As long as the game is running, the clouds move left at a constant
+ * speed and when they hit the left bound, are tleported back to the right bound.
+ */
+
 public class MoveLeft : MonoBehaviour {
 
     [SerializeField] float speed;
@@ -10,12 +15,10 @@ public class MoveLeft : MonoBehaviour {
 
     private GameManager gameManager;
     
-    // Start is called before the first frame update
     void Start() {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
-    // Update is called once per frame
     void Update() {
         //constantly moves left while game is running
         transform.Translate(Vector3.left * Time.deltaTime * speed);

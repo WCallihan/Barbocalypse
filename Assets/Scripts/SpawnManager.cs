@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Used by the GameManager object
+ * Manages the spawning of enemies and powerups as long as the game is running.
+ * The spawn rates of the four different enemies and powerups are adjusted based
+ * based on how long the game has been running.
+ */
+
 public class SpawnManager : MonoBehaviour {
 
     [SerializeField] Transform leftSpawn;
@@ -31,7 +37,6 @@ public class SpawnManager : MonoBehaviour {
     private float maxPowerupTimer;
     private float powerupWaitTimer;
 
-    // Start is called before the first frame update
     void Start() {
         gameManager = gameObject.GetComponent<GameManager>();
         waitingToSpawnEnemy = false;
@@ -39,7 +44,6 @@ public class SpawnManager : MonoBehaviour {
         InvokeRepeating("SpawnPowerup", 0, 30);
     }
 
-    // Update is called once per frame
     void Update() {
         //changes enemy spawnrates over certain intervals
         if(gameManager.gameRunning) {
@@ -101,6 +105,7 @@ public class SpawnManager : MonoBehaviour {
         }
     }
 
+    //spawns a random enemy based on each of their spawn probabilities on a random side, left or right; waits a random time between spawning each
     IEnumerator SpawnEnemy() {
         float waitTimer = Random.Range(minEnemyWait, maxEnemyWait);
         int spawnSide = Random.Range(0, 2);
@@ -131,6 +136,7 @@ public class SpawnManager : MonoBehaviour {
         waitingToSpawnEnemy = false;
     }
 
+    //spawns a random powerup in a random position on the field; waits a set time between spawning each
     IEnumerator SpawnPowerup() {
         int powerupIndex = Random.Range(0, powerupPrefabs.Length);
         Vector3 powerupSpawn = new Vector3(Random.Range(leftSpawn.transform.position.x, rightSpawn.transform.position.x), 0.7f, 0.5f);

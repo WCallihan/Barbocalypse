@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Used by the Projectile prefabs
+ * When the projectiles are spawned they travel straight in the Player's
+ * facing direction and damages any enemies it hits. The projectile is destroyed
+ * when it reaches the left or right bound of the environment.
+ */
+
 public class ProjectilePowerup : MonoBehaviour {
 
     private PlayerController player;
@@ -10,7 +16,6 @@ public class ProjectilePowerup : MonoBehaviour {
 
     public Vector3 spawnOffset;
 
-    // Start is called before the first frame update
     void Start() {
         player = GameObject.Find("Player").GetComponent<PlayerController>();
         //assigns which way the sprite will move
@@ -22,7 +27,6 @@ public class ProjectilePowerup : MonoBehaviour {
         }
     }
 
-    // Update is called once per frame
     void Update() {
         //moves in assigned direction at speed for as long as its alive
         transform.Translate(moveVector * Time.deltaTime * speed);

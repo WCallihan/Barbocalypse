@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Used by the Powerup prefabs
+ * Defines a powerup type enumerator type to be used by the Player
+ * and sets one of those types for each powerup. The powerup bobs
+ * up and down until it is picked up and destroyed.
+ */
+
 public enum PowerupType { None, Sword, Shield, Projectile }
 
 public class Powerup : MonoBehaviour {
@@ -14,14 +20,12 @@ public class Powerup : MonoBehaviour {
     private float speed = 0.2f;
     private bool movingUp = true;
 
-    // Start is called before the first frame update
     void Start() {
         startPos = transform.position.y;
         topPos = startPos + 0.08f;
         bottomPos = startPos - 0.08f;
     }
 
-    // Update is called once per frame
     void Update() {
         //constantly bobs up and down slightly
         if(movingUp) {

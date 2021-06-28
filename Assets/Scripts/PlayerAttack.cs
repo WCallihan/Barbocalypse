@@ -2,6 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Used by the Player prefab
+ * Called by PlayerController to attack in front of the object
+ * based on its current facing direction and uses a drawn circle
+ * to the side of the obejct based on the attack positions and the
+ * attack range. Anything in the circle of the enemy layer (enemies)
+ * has their TakeDamage function called in their controller
+ */
+
 public class PlayerAttack : MonoBehaviour {
 
     [SerializeField] Transform attackRightPos;
@@ -9,10 +17,6 @@ public class PlayerAttack : MonoBehaviour {
     [SerializeField] float attackRange = 0.5f;
     [SerializeField] LayerMask enemyLayers;
     [SerializeField] int attackDamage;
-
-    // Update is called once per frame
-    void Update() {
-    }
 
     //called by characters and enemies to deal damage, animation handled by the specific script
     public void Attack(int damage, int facingDirection) {

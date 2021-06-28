@@ -3,7 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
-using UnityEngine.UI;
+
+/* Used by the GameManager object
+ * This script mostly deals with the User Interface and controlling the various
+ * screens that the player can view. This manager sets the gameRunning variable used by
+ * many other objects, and stops everything when it detects that the Player has died.
+ * This scripts also controls the game timer displayed in the top right and the score displayed
+ * in the top left. The background is gradually turned to a dark blue while the game is running.
+ */
 
 public class GameManager : MonoBehaviour {
 
@@ -30,7 +37,6 @@ public class GameManager : MonoBehaviour {
     public bool gameRunning;
     public int score;
 
-    // Start is called before the first frame update
     void Start() {
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         healthManager = GameObject.Find("Player").GetComponent<HealthManager>();
@@ -38,10 +44,9 @@ public class GameManager : MonoBehaviour {
         originalColor = background.color;
     }
 
-    // Update is called once per frame
     void Update() {
-        //fades the background into a deep blue over 10 minutes
-        backgroundTimer += Time.deltaTime / 600f; //hits 1 at 10 minutes
+        //fades the background into a deep blue over 5 minutes
+        backgroundTimer += Time.deltaTime / 300f; //hits 1 at 5 minutes
         background.color = Color.Lerp(originalColor, finalColor, backgroundTimer);
 
         //gametimer keeps track of how long the player has been going
@@ -103,15 +108,18 @@ public class GameManager : MonoBehaviour {
         controlsScreen.SetActive(false);
         startScreen.SetActive(true);
     }
+    //turns on the Options Screen and turns off all other possible screens
     public void OptionsScreen() {
         startScreen.SetActive(false);
         controlsScreen.SetActive(false);
         optionsScreen.SetActive(true);
     }
+    //turns on the Controls Screen and turns off all other possible screens
     public void ControlsScreen() {
         optionsScreen.SetActive(false);
         controlsScreen.SetActive(true);
     }
+    //turns on the Credits Screen and turns off all other possible screens
     public void CreditsScreen() {
         startScreen.SetActive(false);
         creditsScreen.SetActive(true);

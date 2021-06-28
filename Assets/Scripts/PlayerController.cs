@@ -1,6 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/* Used by the Player prefab
+ * This script controls nearly everything having to do with the Player object.
+ * Inputs are taken to execute actions and move the Player. Values such as speed,
+ * jump force, roll force, and the blood toggle are stored and used.
+ * 
+ * All Player animations are also handled here including running, jumping, rolling,
+ * wall sliding, blocking, attacking, getting hurt, and dying.
+ * The Player detects surfaces all around it with the ground and wall sensors and
+ * uses those to help identify the necessary animation state. 
+ * The Player attacks and blocks when the input is received to do so and the player isn't\
+ * moving in any way.
+ * 
+ * The Player detects if it is over a powerup and if it has been picked up. The powerup
+ * effects are handled here in their own coroutines. Only one powerup can be active at a time.
+ * The Player's indicator children are assigned and activated and deactivated depending
+ * on the currently active powerup.
+ * 
+ * All sound effects, including three different sword swings, getting hurt, and blocking,
+ * are handled by the appropiate function.
+ */
+
 public class PlayerController : MonoBehaviour {
 
     [SerializeField] float m_speed = 4.0f;
@@ -48,7 +69,6 @@ public class PlayerController : MonoBehaviour {
 
     private float lastFrameInputX = 0;
 
-    // Use this for initialization
     void Start() {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         m_animator = GetComponent<Animator>();
@@ -66,7 +86,6 @@ public class PlayerController : MonoBehaviour {
         m_blood = (PlayerPrefs.GetInt("BloodToggle") == 1);
     }
 
-    // Update is called once per frame
     void Update() {
         if(gameManager.gameRunning && !isDead) {
             // Increase timer that controls attack combo
@@ -105,6 +124,9 @@ public class PlayerController : MonoBehaviour {
             if(!m_rolling) {
                 m_body2d.velocity = new Vector2(inputX * m_speed, m_body2d.velocity.y);
             }
+
+            //Set AirSpeed in animator
+            m_animator.SetFloat("AirSpeedY", m_body2d.velocity.y);
 
             // -- Handle Animations --
             //Wall Slide

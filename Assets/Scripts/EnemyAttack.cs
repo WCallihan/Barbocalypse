@@ -1,6 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+ 
+/* Used by all Enemy prefabs
+ * Called only by EnemyController to attack based on the object's current facing direction and
+ * uses a drawn circle to the side of the object based on the attack positions assigned and the
+ * assigned attack range. Anything in the circle that is of the assigned enemy layer (the player)
+ * has their TakeDamage function called in their controller.
+ */
 
 public class EnemyAttack : MonoBehaviour {
 
@@ -10,11 +17,7 @@ public class EnemyAttack : MonoBehaviour {
     [SerializeField] LayerMask enemyLayers;
     [SerializeField] int attackDamage = 1;
 
-    // Update is called once per frame
-    void Update() {
-    }
-
-    //called by characters and enemies to deal damage, animation handled by the specific script
+    //called by characters and enemies to deal damage, animation handled by the controller script
     public void Attack(int facingDirection) {
         Collider2D[] enemiesToDamage = null;
         if(facingDirection == 1) { //facing right
@@ -30,7 +33,7 @@ public class EnemyAttack : MonoBehaviour {
         }
     }
 
-    //draws representation of the attack area when selected in the editor
+    //draws representation of the attack area when the object is selected in the editor
     private void OnDrawGizmosSelected() {
         if(attackRightPos != null) {
             Gizmos.DrawWireSphere(attackRightPos.position, attackRange);

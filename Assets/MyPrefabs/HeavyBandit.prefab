@@ -119,6 +119,7 @@ MonoBehaviour:
   pointsValue: 10
   swordSwipe: {fileID: 8300000, guid: 20405f3ca15cf4a35b1f5ac57277570c, type: 3}
   hurtSound: {fileID: 8300000, guid: e1c46311240d04071ad00f2e40cc164e, type: 3}
+  m_isDead: 0
 --- !u!114 &1284407041328663175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,7 +268,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.2554723
+  m_Volume: 0
   m_Pitch: 1
   Loop: 0
   Mute: 0
